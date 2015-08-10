@@ -11,7 +11,8 @@
     "lodash": "^3.10.1",
     "method-override": "^2.3.5",
     "webpack": "^1.11.0",
-    "when": "^3.7.3"
+    "when": "^3.7.3",
+    "dancer": "~0.4.0"
   },
   "devDependencies": {
     "async": "^1.4.0",

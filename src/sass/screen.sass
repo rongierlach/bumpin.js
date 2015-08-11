@@ -33,9 +33,10 @@ body
 a:link, a:visited
   color: $black
   text-decoration: none
-  +transition(0.3s)
+  // +transition(0.3s)
   &:hover
-    color: $white
+    color: $black
+    font-weight: bold
 
 ul
   list-style: none
@@ -49,15 +50,42 @@ ul
   max-width: em(1140)
   text-align: center
 
-.bump-me
+.bump-me, .me-too
   display: inline-block
   padding: 1em
   font-size: 1.5em
   font-weight: bold
+  margin: auto 1em
   margin-top: 20%
   border: 5px solid black
 
+.me-too
+  padding: 1em 1.5em
 
+ul.controls
+  margin-top: 20%
+  font-size: 1.2em
+  li
+    display: inline-block
+    text-align: center
+    a
+      display: inline-block
+      text-align: center
+      padding: 8px 8px
+      text-decoration: none
+      &:hover
+        font-weight: bold
+      &::after
+        display: block
+        content: attr(title)
+        font-weight: bold
+        height: 1px
+        color: transparent
+        overflow: hidden
+        visibility: hidden
+
+    a.delimiter
+      pointer-events: none
 
 
 // :: Basic Media Queries

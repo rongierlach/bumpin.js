@@ -23,6 +23,7 @@ module.exports = ->
     fonts: _path.normalize "#{src}/fonts"
     imgs: _path.normalize "#{src}/images"
     favicons: _path.normalize "#{src}/images/favicons"
+    audio: _path.normalize "#{src}/audio"
 
   dist:
     root: dist
@@ -31,3 +32,4 @@ module.exports = ->
     fonts: _path.normalize "#{dist}/fonts"
     imgs: _path.normalize "#{dist}/images"
     favicons: _path.normalize "#{dist}/images/favicons"
+    audio: _path.normalize "#{dist}/audio"

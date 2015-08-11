@@ -11,7 +11,9 @@ module.exports = (gulp, gutil, config) ->
     browserSync {
       server:
         baseDir: paths.dist.root
-      open: false
+      # open: false
+      # proxy: 'htp://localhost:5000'
+      port: 4000
       browser: 'google chrome'
       watchOptions:
         debounceDelay: 200
@@ -34,6 +36,9 @@ module.exports = (gulp, gutil, config) ->
     #---- copy misc src ---#
     #fonts
     gulp.watch("#{paths.src.fonts}/**/*", ["copy-fonts"]).on("error", handleErrors)
+
+    #audio
+    gulp.watch("#{paths.src.audio}/**/*", ['copy-audio']).on("error", handleErrors)
 
     #watch dist for changes and reload
     gulp.watch("#{paths.dist.root}/**/*").on "change", browserSync.reload

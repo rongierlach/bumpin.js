@@ -6,7 +6,24 @@ block header
 block content
   .container
     h1 Bumpin.js
-    .bump-me Bump Me!
+    a(href="#").bump-me Bump Me.
+    a(href="#").me-too Me Too!
+    
+    ul.controls
+      li
+        a.play(href="#play" title="play") play
+      li
+        a.delimiter //
+      li
+        a.pause(href="#pause" title="pause") pause
+      //- li
+      //-   a.delimiter //
+      //- li
+      //-   a.stop(href="#stop" title="stop") stop
+      li
+        a.delimiter //
+      li
+        a.github(href="https://github.com/rongierlach/bumpin.js" title="github" target="_blank") github
 
 block footer
   include /includes/_footer

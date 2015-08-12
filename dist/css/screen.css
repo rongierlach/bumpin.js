@@ -118,29 +118,36 @@ ul {
 .me-too {
   padding: 1em 1.5em; }
 
-ul.controls {
-  margin-top: 20%;
+.controls {
+  margin-top: 15%;
   font-size: 1.2em; }
-  ul.controls li {
-    display: inline-block;
-    text-align: center; }
-    ul.controls li a {
+  .controls ul {
+    padding-left: 0; }
+    .controls ul li {
       display: inline-block;
-      text-align: center;
-      padding: 8px 8px;
-      text-decoration: none; }
-      ul.controls li a:hover {
-        font-weight: bold; }
-      ul.controls li a::after {
-        display: block;
-        content: attr(title);
-        font-weight: bold;
-        height: 1px;
-        color: transparent;
-        overflow: hidden;
-        visibility: hidden; }
-    ul.controls li a.delimiter {
-      pointer-events: none; }
+      text-align: center; }
+      .controls ul li a {
+        display: inline-block;
+        text-align: center;
+        padding: 6px 8px;
+        text-decoration: none; }
+        .controls ul li a:hover {
+          font-weight: bold; }
+        .controls ul li a::after {
+          display: block;
+          content: attr(title);
+          font-weight: bold;
+          height: 1px;
+          color: transparent;
+          overflow: hidden;
+          visibility: hidden; }
+      .controls ul li a.delimiter {
+        pointer-events: none; }
+  .controls ul.volume {
+    font-size: 2em;
+    margin-bottom: 0; }
+    .controls ul.volume li a {
+      padding: 6px 20px; }
 
 @media screen and (min-width: 20em) and (max-width: 50em) {
   .container {

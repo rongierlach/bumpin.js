@@ -62,31 +62,38 @@ ul
 .me-too
   padding: 1em 1.5em
 
-ul.controls
-  margin-top: 20%
+.controls
+  margin-top: 15%
   font-size: 1.2em
-  li
-    display: inline-block
-    text-align: center
-    a
+  ul
+    padding-left: 0
+    li
       display: inline-block
       text-align: center
-      padding: 8px 8px
-      text-decoration: none
-      &:hover
-        font-weight: bold
-      &::after
-        display: block
-        content: attr(title)
-        font-weight: bold
-        height: 1px
-        color: transparent
-        overflow: hidden
-        visibility: hidden
+      a
+        display: inline-block
+        text-align: center
+        padding: 6px 8px
+        text-decoration: none
+        &:hover
+          font-weight: bold
+        &::after
+          display: block
+          content: attr(title)
+          font-weight: bold
+          height: 1px
+          color: transparent
+          overflow: hidden
+          visibility: hidden
+      a.delimiter
+        pointer-events: none
 
-    a.delimiter
-      pointer-events: none
-
+  ul.volume
+    font-size: 2em
+    margin-bottom: 0
+    li
+      a
+        padding: 6px 20px
 
 // :: Basic Media Queries
 // http://thoughtbot.github.io/neat-docs/latest/#media

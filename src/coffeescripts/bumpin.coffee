@@ -11,12 +11,15 @@ class Bumpin
 
     # dancer config
     @d = new Dancer()
-    @d.bind 'update', => @update()
-    @d.bind 'loaded', => @play() if @autoplay
+    @d.bind 'update', =>
+      settings.onUpdate()
+      @update()
+    @d.bind 'loaded', =>
+      settings.onLoad()
+      @play() if @autoplay
 
     # initialize animations array and add first animation
     @kicks = []
-    @direction_keys = { up: 'up', u: 'up', '^': 'up', down: 'down', d: 'down', 'v': 'down', left: 'left', l: 'left', '<': 'left', right: 'right', r: 'right', '>': 'right' }
     @addKick settings
 
     # setup controls
@@ -30,8 +33,7 @@ class Bumpin
 
   update: ->
     current_time = @d.getTime()
-    if @time is current_time
-      @pause()
+    if @time is current_time and @isPlaying()
       @play() if @loop
     @time = current_time
 
@@ -40,14 +42,16 @@ class Bumpin
   pause: -> @d.pause()
   setVolume: (val) -> @d.setVolume val
   getVolume: -> @d.getVolume()
-  volumeUp: -> @setVolume @getVolume() + 1
-  volumeDown: -> @setVolume( if @getVolume() - 1 > 0 then @getVolume() - 1 else 0 )
+  volumeUp:   -> @setVolume( if @getVolume() + .2 < 3 then @getVolume() + .2 else 2 )
+  volumeDown: -> @setVolume( if @getVolume() - .2 > 0 then @getVolume() - .2 else 0 )
 
-  destroy: (stop_the_music)->
-    @d.pause() if stop_the_music
-    window.bumpin_instance = undefined
+  # destroy: (dont_stop_the_music) ->
+  #   @d.pause() unless dont_stop_the_music
+  #   window.bumpin_instance = undefined
 
   isPlaying: -> @d.isPlaying()
+  isLoaded: -> @d.isLoaded()
+  getTime: -> @d.getTime()
 
   loadAudio: (audio_src) ->
     a = new Audio()
@@ -55,40 +59,83 @@ class Bumpin
     @d.load a
 
   addKick: (settings) ->
-    animation =
+    animation_data =
       selector: settings.selector
-      direction: @direction_keys[settings.direction.toLowerCase()]
       speed: settings.speed
-      easing: settings.easing
-      distance: settings.distance
-      hover_stop: settings.hover_stop
+      scale: settings.scale
       freq: settings.freq
       ampl: settings.ampl
       threshold: settings.ampl
+      change_color: settings.change_color
       is_animating: false
+      id: Object.keys(@kicks).length
 
     kick = @d.createKick
-      frequency: animation.freq
-      threshold: animation.threshold
-      decay: animation.decay
-      onKick: @onKick animation
-      offKick: @offKick animation
+      frequency: animation_data.freq
+      threshold: animation_data.threshold
+      decay: animation_data.decay
+      onKick: @onKick animation_data
+      offKick: @offKick animation_data
 
-    kick.animation = animation
-    @kicks.push kick
+    kick.id = Object.keys(@kicks).length
+    kick.animation_data = animation_data
+    @kicks["#{kick.id}"] = kick
     kick.on()
 
   onKick: (a) ->
     selector = a.selector
     freq = a.freq
     return =>
+      # get the kick
+      kick = @kicks["#{a.id}"]
+      # select and animate
+      $elm = $ kick.animation_data.selector
+
+      # calculate amplitude of current frequency
       current_freq = undefined
       if typeof freq is 'number'
         current_freq = @d.getFrequency freq
       else
         current_freq = @d.getFrequency freq...
 
-      # console.log "kick ON for selector #{selector}, at freq #{current_freq}"
+      # animate element
+      if kick and !kick.is_animating
+
+        # animation opts
+        anim = {}
+        anim_data = kick.animation_data
+        scale = undefined
+        if typeof anim_data.scale is 'number'
+          scale = anim_data.scale
+        else
+          range = anim_data.scale[1] - anim_data.scale[0]
+          scale = anim_data.scale[0] + (current_freq / freq * range)
+        anim.scaleX = scale
+        anim.scaleY = scale
+
+        # other opts and callbacks
+        other_opts =
+          begin: () => @kicks["#{a.id}"].is_animating = true
+          duration: scale / a.speed / 2
+
+        # random color
+        if anim_data.change_color
+          color = @getRandomColor()
+          $elm.css { color: color, 'border-color': color }
+
+        # animate
+        $elm.velocity anim, other_opts
+
+        # reverse animation
+        setTimeout () =>
+          reverse_anim = {}
+          reverse_anim.scaleX = 1
+          reverse_anim.scaleY = 1
+          reverse_other_opts =
+            complete: => @kicks["#{a.id}"].is_animating = false
+            duration: scale / a.speed / 2
+          $elm.velocity reverse_anim, reverse_other_opts
+        , other_opts.duration
 
   offKick: (a) ->
     selector = a.selector
@@ -126,6 +173,13 @@ class Bumpin
       e.preventDefault()
       @volumeDown()
 
+  getRandomColor: ->
+    letters = '0123456789ABCDEF'.split('')
+    color = '#'
+    for i in [0..5]
+      color += letters[Math.floor(Math.random() * 16)]
+    return color
+
 
 module.exports = ->
   $.fn.bumpin = (opts) ->
@@ -135,19 +189,17 @@ module.exports = ->
     # specify default options
     settings = $.extend {
       # play options
-      autoplay: true
+      autoplay: false
       loop: false
+      onLoad: ->
+      onUpdate: ->
 
       # animation options
       selector: @selector
-      direction: 'down' # takes [up, down, left, right, u, d, l, r, ^, v, <, >], eventually implement degree system...
+      change_color: false
       speed: 200 # ms
-      easing: 20 # ms
-      distance: [0, 60] # range or single value (pixels)
-      hover_stop: false # stop animating on hover event
-      # 'kick' actuation point options frequency (usually best between 20 to 100 hz) and amplitude
+      scale: [0, 60] # range or single value (pixels)
       freq: [20, 100] # min - max hz
-      # ampl: [0, 666] # min - max db
       ampl: 0.3
       decay: 0.02
 
@@ -156,7 +208,6 @@ module.exports = ->
       pause_btn: '#pause'
       volume_up: '#volume_up'
       volume_down: '#volume_down'
-
 
     }, opts
 
@@ -168,7 +219,7 @@ module.exports = ->
     bumpin[func]() if func and bumpin
 
     # add animation if selector is given and a bumpin instance exists
-    bumpin.loadAnimation settings if @selector and bumpin
+    bumpin.addKick settings if @selector and bumpin
 
     # create first instance if bumpin does not exist
     unless bumpin

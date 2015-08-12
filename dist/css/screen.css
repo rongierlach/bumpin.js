@@ -109,21 +109,23 @@ ul {
 .title {
   margin-top: .5em; }
 
-.bumper {
-  display: block; }
+.bumpers {
+  width: 100%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%); }
 
 .bump-me, .me-too {
   display: inline-block;
   padding: 1em;
   font-size: 1.5em;
   font-weight: bold;
-  margin: auto 1em;
-  margin-top: 3em;
+  margin: 1em 1em;
   border: 5px solid black; }
 
 .me-too {
-  padding: 1em 1.5em;
-  margin-top: 3em; }
+  padding: 1em 1.5em; }
 
 .controls {
   position: absolute;

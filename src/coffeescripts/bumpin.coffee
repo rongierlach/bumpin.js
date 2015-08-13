@@ -11,12 +11,8 @@ class Bumpin
 
     # dancer config
     @d = new Dancer()
-    @d.bind 'update', =>
-      settings.onUpdate()
-      @update()
-    @d.bind 'loaded', =>
-      settings.onLoad()
-      @play() if @autoplay
+    @d.bind 'update', => @update()
+    @d.bind 'loaded', => @play() if @autoplay
 
     # initialize animations array and add first animation
     @kicks = []
@@ -33,8 +29,10 @@ class Bumpin
 
   update: ->
     current_time = @d.getTime()
-    if @time is current_time and @isPlaying()
-      @play() if @loop
+    if @time is current_time and @time != 0
+      if @loop
+        @pause()
+        @play()
     @time = current_time
 
   # control methods
@@ -66,9 +64,9 @@ class Bumpin
       freq: settings.freq
       ampl: settings.ampl
       threshold: settings.ampl
-      change_color: settings.change_color
       is_animating: false
       id: Object.keys(@kicks).length
+      onKick: settings.onKick
 
     kick = @d.createKick
       frequency: animation_data.freq
@@ -118,11 +116,6 @@ class Bumpin
           begin: () => @kicks["#{a.id}"].is_animating = true
           duration: scale / a.speed / 2
 
-        # random color
-        if anim_data.change_color
-          color = @getRandomColor()
-          $elm.css { color: color, 'border-color': color }
-
         # animate
         $elm.velocity anim, other_opts
 
@@ -136,6 +129,10 @@ class Bumpin
             duration: scale / a.speed / 2
           $elm.velocity reverse_anim, reverse_other_opts
         , other_opts.duration
+
+        # callback
+        kick.animation_data.onKick kick
+
 
   offKick: (a) ->
     selector = a.selector
@@ -173,13 +170,6 @@ class Bumpin
       e.preventDefault()
       @volumeDown()
 
-  getRandomColor: ->
-    letters = '0123456789ABCDEF'.split('')
-    color = '#'
-    for i in [0..5]
-      color += letters[Math.floor(Math.random() * 16)]
-    return color
-
 
 module.exports = ->
   $.fn.bumpin = (opts) ->
@@ -191,17 +181,15 @@ module.exports = ->
       # play options
       autoplay: false
       loop: false
-      onLoad: ->
-      onUpdate: ->
 
       # animation options
       selector: @selector
-      change_color: false
       speed: 200 # ms
       scale: [0, 60] # range or single value (pixels)
       freq: [20, 100] # min - max hz
       ampl: 0.3
       decay: 0.02
+      onKick: ->
 
       # href attrs for control buttons on the page
       play_btn: '#play'

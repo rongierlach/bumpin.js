@@ -12,8 +12,10 @@ $(document).ready ->
 		return color
 
 	init =
-		# audio src
-		audio_src: "./audio/bumpin.mp3"
+		# audio source
+		# audio_src: "./audio/bumpin.mp3"
+		# audio_src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/161040/bumpin.mp3"
+		audio_src: 'http://youfoundron.com/cdn/audio/bumpin.mp3'
 
 		# play options
 		autoplay: false
@@ -25,8 +27,8 @@ $(document).ready ->
 		volume_up: '#volume_up'
 		volume_down: '#volume_down'
 
+	# animation options
 	opts =
-		# animation options
 		change_color: true
 		speed: 80 # ms
 		scale: [1, 1.5] # range or single value (pixels)
@@ -35,16 +37,13 @@ $(document).ready ->
 		decay: 0.02 # the rate that the previously registered kick's amplitude is reduced by on every frame. Default: 0.02
 		onKick: (kick) ->
 
-
 	moar_opts = $.extend {}, opts
+	# example use of onKick callback
 	moar_opts.onKick = (kick) ->
 		color = getRandomColor()
 		$elm = $ kick.animation_data.selector
 		$elm.css { color: color, 'border-color': color }
 
-	# title_opts = $.extend {}, opts
-	# title_opts.change_color = false
-	# title_opts.onKick = ->
 
 	$().bumpin init
 	$('.bump-me').bumpin opts

@@ -22,7 +22,7 @@ class Bumpin
     @setupControls settings
 
     # load in audio
-    @loadAudio settings.audio_src
+    @loadAudio settings.audio_src, settings.codecs
 
     # return this
     return @
@@ -51,10 +51,17 @@ class Bumpin
   isLoaded: -> @d.isLoaded()
   getTime: -> @d.getTime()
 
-  loadAudio: (audio_src) ->
-    a = new Audio()
-    a.src = audio_src
-    @d.load a
+  loadAudio: (audio_src, codecs) ->
+    if codecs
+      @d.load { src: audio_src, codecs: codecs }
+    else if typeof audio_src is 'object'
+      @d.load audio_src
+    else
+      a = new Audio()
+      a.crossOrigin = 'Anonymous'
+      a.src = audio_src
+      @d.load a
+
 
   addKick: (settings) ->
     animation_data =
@@ -185,8 +192,8 @@ module.exports = ->
       # animation options
       selector: @selector
       speed: 200 # ms
-      scale: [0, 60] # range or single value (pixels)
-      freq: [20, 100] # min - max hz
+      scale: [1, 1.5] # range or single value
+      freq: [.2, 1] # min - max kHz
       ampl: 0.3
       decay: 0.02
       onKick: ->

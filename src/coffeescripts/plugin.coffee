@@ -1,5 +1,6 @@
-# require 'velocity/velocity.js'
-# require 'dancer/dancer.js' # https://www.npmjs.com/package/dancer
+$ = require 'jquery'
+require 'velocity/velocity.js'
+require 'dancer/dancer.js' # https://www.npmjs.com/package/dancer
 
 # bumpin class
 class Bumpin

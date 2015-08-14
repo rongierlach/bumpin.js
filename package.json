@@ -1,9 +1,9 @@
 {
   "name": "bumpin.js",
   "description": "Affect DOM elements with the Web Audio API",
-  "author": "Ron Gierlach <ron@theuprisingcreative.com> (http://youfoundron.com)",
+  "author": "@youfoundron <ron@theuprisingcreative.com> (http://youfoundron.com)",
   "version": "0.0.0",
-  "main": "",
+  "main": "bin/bumpin.js",
   "dependencies": {
     "body-parser": "^1.13.3",
     "errorhandler": "^1.4.2",

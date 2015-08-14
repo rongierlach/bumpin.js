@@ -13,8 +13,6 @@ $(document).ready ->
 
 	init =
 		# audio source
-		# audio_src: "./audio/bumpin.mp3"
-		# audio_src: "https://s3-us-west-2.amazonaws.com/s.cdpn.io/161040/bumpin.mp3"
 		audio_src: 'http://youfoundron.com/cdn/audio/bumpin.mp3'
 
 		# play options

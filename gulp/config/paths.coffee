@@ -2,11 +2,13 @@ _path = require 'path'
 
 module.exports = ->
   root = _path.normalize global.__base
+  bin = _path.normalize "#{root}/bin"
   config = _path.normalize "#{root}/config.coffee"
   src =  _path.normalize "#{root}/src"
   dist = _path.normalize "#{root}/dist"
 
   root: root
+  bin: bin
   config: config
   gulp: _path.normalize "#{root}/gulp"
 

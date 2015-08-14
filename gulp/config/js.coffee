@@ -20,8 +20,8 @@ module.exports = (config) ->
         "_hostname_": JSON.stringify(app_config.hosturl)
         "_CDN_": JSON.stringify(app_config.cdn)
     }
-    {
-      src: [ "#{paths.src.coffee}/plugin.coffee"]
-      dest: "bumpin.js"
-    }
+    # {
+    #   src: [ "#{paths.src.coffee}/plugin.coffee"]
+    #   dest: "bumpin.js"
+    # }
   ]

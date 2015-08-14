@@ -1,59 +1,269 @@
-/******/ (function(modules) { // webpackBootstrap
-/******/ 	// The module cache
-/******/ 	var installedModules = {};
-/******/
-/******/ 	// The require function
-/******/ 	function __webpack_require__(moduleId) {
-/******/
-/******/ 		// Check if module is in cache
-/******/ 		if(installedModules[moduleId])
-/******/ 			return installedModules[moduleId].exports;
-/******/
-/******/ 		// Create a new module (and put it into the cache)
-/******/ 		var module = installedModules[moduleId] = {
-/******/ 			exports: {},
-/******/ 			id: moduleId,
-/******/ 			loaded: false
-/******/ 		};
-/******/
-/******/ 		// Execute the module function
-/******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
-/******/ 		// Flag the module as loaded
-/******/ 		module.loaded = true;
-/******/
-/******/ 		// Return the exports of the module
-/******/ 		return module.exports;
-/******/ 	}
-/******/
-/******/
-/******/ 	// expose the modules object (__webpack_modules__)
-/******/ 	__webpack_require__.m = modules;
-/******/
-/******/ 	// expose the module cache
-/******/ 	__webpack_require__.c = installedModules;
-/******/
-/******/ 	// __webpack_public_path__
-/******/ 	__webpack_require__.p = "/javascripts/";
-/******/
-/******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(0);
-/******/ })
-/************************************************************************/
-/******/ ([
-/* 0 */
-/***/ function(module, exports, __webpack_require__) {
+(function() {
+  var Bumpin;
 
-	module.exports = __webpack_require__(1);
+  Bumpin = (function() {
+    function Bumpin(settings) {
+      this.autoplay = settings.autoplay;
+      this.loop = settings.loop;
+      this.time = 0;
+      this.d = new Dancer();
+      this.d.bind('update', (function(_this) {
+        return function() {
+          return _this.update();
+        };
+      })(this));
+      this.d.bind('loaded', (function(_this) {
+        return function() {
+          if (_this.autoplay) {
+            return _this.play();
+          }
+        };
+      })(this));
+      this.kicks = [];
+      this.addKick(settings);
+      this.setupControls(settings);
+      this.loadAudio(settings.audio_src, settings.codecs);
+      return this;
+    }
 
+    Bumpin.prototype.update = function() {
+      var current_time;
+      current_time = this.d.getTime();
+      if (this.time === current_time && this.time !== 0) {
+        if (this.loop) {
+          this.pause();
+          this.play();
+        }
+      }
+      return this.time = current_time;
+    };
 
-/***/ },
-/* 1 */
-/***/ function(module, exports) {
+    Bumpin.prototype.play = function() {
+      return this.d.play();
+    };
 
-	console.log("I'm included");
+    Bumpin.prototype.pause = function() {
+      return this.d.pause();
+    };
 
+    Bumpin.prototype.setVolume = function(val) {
+      return this.d.setVolume(val);
+    };
 
-/***/ }
-/******/ ]);
-//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIndlYnBhY2s6Ly8vd2VicGFjay9ib290c3RyYXAgNTE0M2RjY2I0YWFiMzQxZjE2OTgiLCJ3ZWJwYWNrOi8vLy4vc3JjL2NvZmZlZXNjcmlwdHMvcGx1Z2luLmNvZmZlZSJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiO0FBQUE7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTs7QUFFQTtBQUNBO0FBQ0EsdUJBQWU7QUFDZjtBQUNBO0FBQ0E7O0FBRUE7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7QUFDQTs7O0FBR0E7QUFDQTs7QUFFQTtBQUNBOztBQUVBO0FBQ0E7O0FBRUE7QUFDQTs7Ozs7Ozs7Ozs7Ozs7QUN0Q0EsUUFBTyxDQUFDLEdBQVIsQ0FBWSxjQUFaIiwiZmlsZSI6ImJ1bXBpbi5qcyIsInNvdXJjZXNDb250ZW50IjpbIiBcdC8vIFRoZSBtb2R1bGUgY2FjaGVcbiBcdHZhciBpbnN0YWxsZWRNb2R1bGVzID0ge307XG5cbiBcdC8vIFRoZSByZXF1aXJlIGZ1bmN0aW9uXG4gXHRmdW5jdGlvbiBfX3dlYnBhY2tfcmVxdWlyZV9fKG1vZHVsZUlkKSB7XG5cbiBcdFx0Ly8gQ2hlY2sgaWYgbW9kdWxlIGlzIGluIGNhY2hlXG4gXHRcdGlmKGluc3RhbGxlZE1vZHVsZXNbbW9kdWxlSWRdKVxuIFx0XHRcdHJldHVybiBpbnN0YWxsZWRNb2R1bGVzW21vZHVsZUlkXS5leHBvcnRzO1xuXG4gXHRcdC8vIENyZWF0ZSBhIG5ldyBtb2R1bGUgKGFuZCBwdXQgaXQgaW50byB0aGUgY2FjaGUpXG4gXHRcdHZhciBtb2R1bGUgPSBpbnN0YWxsZWRNb2R1bGVzW21vZHVsZUlkXSA9IHtcbiBcdFx0XHRleHBvcnRzOiB7fSxcbiBcdFx0XHRpZDogbW9kdWxlSWQsXG4gXHRcdFx0bG9hZGVkOiBmYWxzZVxuIFx0XHR9O1xuXG4gXHRcdC8vIEV4ZWN1dGUgdGhlIG1vZHVsZSBmdW5jdGlvblxuIFx0XHRtb2R1bGVzW21vZHVsZUlkXS5jYWxsKG1vZHVsZS5leHBvcnRzLCBtb2R1bGUsIG1vZHVsZS5leHBvcnRzLCBfX3dlYnBhY2tfcmVxdWlyZV9fKTtcblxuIFx0XHQvLyBGbGFnIHRoZSBtb2R1bGUgYXMgbG9hZGVkXG4gXHRcdG1vZHVsZS5sb2FkZWQgPSB0cnVlO1xuXG4gXHRcdC8vIFJldHVybiB0aGUgZXhwb3J0cyBvZiB0aGUgbW9kdWxlXG4gXHRcdHJldHVybiBtb2R1bGUuZXhwb3J0cztcbiBcdH1cblxuXG4gXHQvLyBleHBvc2UgdGhlIG1vZHVsZXMgb2JqZWN0IChfX3dlYnBhY2tfbW9kdWxlc19fKVxuIFx0X193ZWJwYWNrX3JlcXVpcmVfXy5tID0gbW9kdWxlcztcblxuIFx0Ly8gZXhwb3NlIHRoZSBtb2R1bGUgY2FjaGVcbiBcdF9fd2VicGFja19yZXF1aXJlX18uYyA9IGluc3RhbGxlZE1vZHVsZXM7XG5cbiBcdC8vIF9fd2VicGFja19wdWJsaWNfcGF0aF9fXG4gXHRfX3dlYnBhY2tfcmVxdWlyZV9fLnAgPSBcIi9qYXZhc2NyaXB0cy9cIjtcblxuIFx0Ly8gTG9hZCBlbnRyeSBtb2R1bGUgYW5kIHJldHVybiBleHBvcnRzXG4gXHRyZXR1cm4gX193ZWJwYWNrX3JlcXVpcmVfXygwKTtcblxuXG5cbi8qKiBXRUJQQUNLIEZPT1RFUiAqKlxuICoqIHdlYnBhY2svYm9vdHN0cmFwIDUxNDNkY2NiNGFhYjM0MWYxNjk4XG4gKiovIiwiY29uc29sZS5sb2cgXCJJJ20gaW5jbHVkZWRcIlxuXG4jXG4jICMgYnVtcGluIGNsYXNzXG4jIGNsYXNzIEJ1bXBpblxuIyAgIGNvbnN0cnVjdG9yOiAoc2V0dGluZ3MpIC0+XG4jICAgICAjIGNvbmZpZyB2YXJzXG4jICAgICBAYXV0b3BsYXkgPSBzZXR0aW5ncy5hdXRvcGxheVxuIyAgICAgQGxvb3AgPSBzZXR0aW5ncy5sb29wXG4jICAgICBAdGltZSA9IDBcbiNcbiMgICAgICMgZGFuY2VyIGNvbmZpZ1xuIyAgICAgQGQgPSBuZXcgRGFuY2VyKClcbiMgICAgIEBkLmJpbmQgJ3VwZGF0ZScsID0+IEB1cGRhdGUoKVxuIyAgICAgQGQuYmluZCAnbG9hZGVkJywgPT4gQHBsYXkoKSBpZiBAYXV0b3BsYXlcbiNcbiMgICAgICMgaW5pdGlhbGl6ZSBhbmltYXRpb25zIGFycmF5IGFuZCBhZGQgZmlyc3QgYW5pbWF0aW9uXG4jICAgICBAa2lja3MgPSBbXVxuIyAgICAgQGFkZEtpY2sgc2V0dGluZ3NcbiNcbiMgICAgICMgc2V0dXAgY29udHJvbHNcbiMgICAgIEBzZXR1cENvbnRyb2xzIHNldHRpbmdzXG4jXG4jICAgICAjIGxvYWQgaW4gYXVkaW9cbiMgICAgIEBsb2FkQXVkaW8gc2V0dGluZ3MuYXVkaW9fc3JjLCBzZXR0aW5ncy5jb2RlY3NcbiNcbiMgICAgICMgcmV0dXJuIHRoaXNcbiMgICAgIHJldHVybiBAXG4jXG4jICAgdXBkYXRlOiAtPlxuIyAgICAgY3VycmVudF90aW1lID0gQGQuZ2V0VGltZSgpXG4jICAgICBpZiBAdGltZSBpcyBjdXJyZW50X3RpbWUgYW5kIEB0aW1lICE9IDBcbiMgICAgICAgaWYgQGxvb3BcbiMgICAgICAgICBAcGF1c2UoKVxuIyAgICAgICAgIEBwbGF5KClcbiMgICAgIEB0aW1lID0gY3VycmVudF90aW1lXG4jXG4jICAgIyBjb250cm9sIG1ldGhvZHNcbiMgICBwbGF5OiAtPiBAZC5wbGF5KClcbiMgICBwYXVzZTogLT4gQGQucGF1c2UoKVxuIyAgIHNldFZvbHVtZTogKHZhbCkgLT4gQGQuc2V0Vm9sdW1lIHZhbFxuIyAgIGdldFZvbHVtZTogLT4gQGQuZ2V0Vm9sdW1lKClcbiMgICB2b2x1bWVVcDogICAtPiBAc2V0Vm9sdW1lKCBpZiBAZ2V0Vm9sdW1lKCkgKyAuMiA8IDMgdGhlbiBAZ2V0Vm9sdW1lKCkgKyAuMiBlbHNlIDIgKVxuIyAgIHZvbHVtZURvd246IC0+IEBzZXRWb2x1bWUoIGlmIEBnZXRWb2x1bWUoKSAtIC4yID4gMCB0aGVuIEBnZXRWb2x1bWUoKSAtIC4yIGVsc2UgMCApXG4jXG4jICAgIyBkZXN0cm95OiAoZG9udF9zdG9wX3RoZV9tdXNpYykgLT5cbiMgICAjICAgQGQucGF1c2UoKSB1bmxlc3MgZG9udF9zdG9wX3RoZV9tdXNpY1xuIyAgICMgICB3aW5kb3cuYnVtcGluX2luc3RhbmNlID0gdW5kZWZpbmVkXG4jXG4jICAgaXNQbGF5aW5nOiAtPiBAZC5pc1BsYXlpbmcoKVxuIyAgIGlzTG9hZGVkOiAtPiBAZC5pc0xvYWRlZCgpXG4jICAgZ2V0VGltZTogLT4gQGQuZ2V0VGltZSgpXG4jXG4jICAgbG9hZEF1ZGlvOiAoYXVkaW9fc3JjLCBjb2RlY3MpIC0+XG4jICAgICBpZiBjb2RlY3NcbiMgICAgICAgQGQubG9hZCB7IHNyYzogYXVkaW9fc3JjLCBjb2RlY3M6IGNvZGVjcyB9XG4jICAgICBlbHNlIGlmIHR5cGVvZiBhdWRpb19zcmMgaXMgJ29iamVjdCdcbiMgICAgICAgQGQubG9hZCBhdWRpb19zcmNcbiMgICAgIGVsc2VcbiMgICAgICAgYSA9IG5ldyBBdWRpbygpXG4jICAgICAgIGEuY3Jvc3NPcmlnaW4gPSAnQW5vbnltb3VzJ1xuIyAgICAgICBhLnNyYyA9IGF1ZGlvX3NyY1xuIyAgICAgICBAZC5sb2FkIGFcbiNcbiNcbiMgICBhZGRLaWNrOiAoc2V0dGluZ3MpIC0+XG4jICAgICBhbmltYXRpb25fZGF0YSA9XG4jICAgICAgIHNlbGVjdG9yOiBzZXR0aW5ncy5zZWxlY3RvclxuIyAgICAgICBzcGVlZDogc2V0dGluZ3Muc3BlZWRcbiMgICAgICAgc2NhbGU6IHNldHRpbmdzLnNjYWxlXG4jICAgICAgIGZyZXE6IHNldHRpbmdzLmZyZXFcbiMgICAgICAgYW1wbDogc2V0dGluZ3MuYW1wbFxuIyAgICAgICB0aHJlc2hvbGQ6IHNldHRpbmdzLmFtcGxcbiMgICAgICAgaXNfYW5pbWF0aW5nOiBmYWxzZVxuIyAgICAgICBpZDogT2JqZWN0LmtleXMoQGtpY2tzKS5sZW5ndGhcbiMgICAgICAgb25LaWNrOiBzZXR0aW5ncy5vbktpY2tcbiNcbiMgICAgIGtpY2sgPSBAZC5jcmVhdGVLaWNrXG4jICAgICAgIGZyZXF1ZW5jeTogYW5pbWF0aW9uX2RhdGEuZnJlcVxuIyAgICAgICB0aHJlc2hvbGQ6IGFuaW1hdGlvbl9kYXRhLnRocmVzaG9sZFxuIyAgICAgICBkZWNheTogYW5pbWF0aW9uX2RhdGEuZGVjYXlcbiMgICAgICAgb25LaWNrOiBAb25LaWNrIGFuaW1hdGlvbl9kYXRhXG4jICAgICAgIG9mZktpY2s6IEBvZmZLaWNrIGFuaW1hdGlvbl9kYXRhXG4jXG4jICAgICBraWNrLmlkID0gT2JqZWN0LmtleXMoQGtpY2tzKS5sZW5ndGhcbiMgICAgIGtpY2suYW5pbWF0aW9uX2RhdGEgPSBhbmltYXRpb25fZGF0YVxuIyAgICAgQGtpY2tzW1wiI3traWNrLmlkfVwiXSA9IGtpY2tcbiMgICAgIGtpY2sub24oKVxuI1xuIyAgIG9uS2ljazogKGEpIC0+XG4jICAgICBzZWxlY3RvciA9IGEuc2VsZWN0b3JcbiMgICAgIGZyZXEgPSBhLmZyZXFcbiMgICAgIHJldHVybiA9PlxuIyAgICAgICAjIGdldCB0aGUga2lja1xuIyAgICAgICBraWNrID0gQGtpY2tzW1wiI3thLmlkfVwiXVxuIyAgICAgICAjIHNlbGVjdCBhbmQgYW5pbWF0ZVxuIyAgICAgICAkZWxtID0gJCBraWNrLmFuaW1hdGlvbl9kYXRhLnNlbGVjdG9yXG4jXG4jICAgICAgICMgY2FsY3VsYXRlIGFtcGxpdHVkZSBvZiBjdXJyZW50IGZyZXF1ZW5jeVxuIyAgICAgICBjdXJyZW50X2ZyZXEgPSB1bmRlZmluZWRcbiMgICAgICAgaWYgdHlwZW9mIGZyZXEgaXMgJ251bWJlcidcbiMgICAgICAgICBjdXJyZW50X2ZyZXEgPSBAZC5nZXRGcmVxdWVuY3kgZnJlcVxuIyAgICAgICBlbHNlXG4jICAgICAgICAgY3VycmVudF9mcmVxID0gQGQuZ2V0RnJlcXVlbmN5IGZyZXEuLi5cbiNcbiMgICAgICAgIyBhbmltYXRlIGVsZW1lbnRcbiMgICAgICAgaWYga2ljayBhbmQgIWtpY2suaXNfYW5pbWF0aW5nXG4jXG4jICAgICAgICAgIyBhbmltYXRpb24gb3B0c1xuIyAgICAgICAgIGFuaW0gPSB7fVxuIyAgICAgICAgIGFuaW1fZGF0YSA9IGtpY2suYW5pbWF0aW9uX2RhdGFcbiMgICAgICAgICBzY2FsZSA9IHVuZGVmaW5lZFxuIyAgICAgICAgIGlmIHR5cGVvZiBhbmltX2RhdGEuc2NhbGUgaXMgJ251bWJlcidcbiMgICAgICAgICAgIHNjYWxlID0gYW5pbV9kYXRhLnNjYWxlXG4jICAgICAgICAgZWxzZVxuIyAgICAgICAgICAgcmFuZ2UgPSBhbmltX2RhdGEuc2NhbGVbMV0gLSBhbmltX2RhdGEuc2NhbGVbMF1cbiMgICAgICAgICAgIHNjYWxlID0gYW5pbV9kYXRhLnNjYWxlWzBdICsgKGN1cnJlbnRfZnJlcSAvIGZyZXEgKiByYW5nZSlcbiMgICAgICAgICBhbmltLnNjYWxlWCA9IHNjYWxlXG4jICAgICAgICAgYW5pbS5zY2FsZVkgPSBzY2FsZVxuI1xuIyAgICAgICAgICMgb3RoZXIgb3B0cyBhbmQgY2FsbGJhY2tzXG4jICAgICAgICAgb3RoZXJfb3B0cyA9XG4jICAgICAgICAgICBiZWdpbjogKCkgPT4gQGtpY2tzW1wiI3thLmlkfVwiXS5pc19hbmltYXRpbmcgPSB0cnVlXG4jICAgICAgICAgICBkdXJhdGlvbjogc2NhbGUgLyBhLnNwZWVkIC8gMlxuI1xuIyAgICAgICAgICMgYW5pbWF0ZVxuIyAgICAgICAgICRlbG0udmVsb2NpdHkgYW5pbSwgb3RoZXJfb3B0c1xuI1xuIyAgICAgICAgICMgcmV2ZXJzZSBhbmltYXRpb25cbiMgICAgICAgICBzZXRUaW1lb3V0ICgpID0+XG4jICAgICAgICAgICByZXZlcnNlX2FuaW0gPSB7fVxuIyAgICAgICAgICAgcmV2ZXJzZV9hbmltLnNjYWxlWCA9IDFcbiMgICAgICAgICAgIHJldmVyc2VfYW5pbS5zY2FsZVkgPSAxXG4jICAgICAgICAgICByZXZlcnNlX290aGVyX29wdHMgPVxuIyAgICAgICAgICAgICBjb21wbGV0ZTogPT4gQGtpY2tzW1wiI3thLmlkfVwiXS5pc19hbmltYXRpbmcgPSBmYWxzZVxuIyAgICAgICAgICAgICBkdXJhdGlvbjogc2NhbGUgLyBhLnNwZWVkIC8gMlxuIyAgICAgICAgICAgJGVsbS52ZWxvY2l0eSByZXZlcnNlX2FuaW0sIHJldmVyc2Vfb3RoZXJfb3B0c1xuIyAgICAgICAgICwgb3RoZXJfb3B0cy5kdXJhdGlvblxuI1xuIyAgICAgICAgICMgY2FsbGJhY2tcbiMgICAgICAgICBraWNrLmFuaW1hdGlvbl9kYXRhLm9uS2ljayBraWNrXG4jXG4jXG4jICAgb2ZmS2ljazogKGEpIC0+XG4jICAgICBzZWxlY3RvciA9IGEuc2VsZWN0b3JcbiMgICAgIGZyZXEgPSBhLmZyZXFcbiMgICAgIHJldHVybiA9PlxuIyAgICAgICBjdXJyZW50X2ZyZXEgPSB1bmRlZmluZWRcbiMgICAgICAgaWYgdHlwZW9mIGZyZXEgaXMgJ251bWJlcidcbiMgICAgICAgICBjdXJyZW50X2ZyZXEgPSBAZC5nZXRGcmVxdWVuY3kgZnJlcVxuIyAgICAgICBlbHNlXG4jICAgICAgICAgY3VycmVudF9mcmVxID0gQGQuZ2V0RnJlcXVlbmN5IGZyZXEuLi5cbiNcbiMgICAgICAgIyBjb25zb2xlLmxvZyBcImtpY2sgT0ZGIGZvciBzZWxlY3RvciAje3NlbGVjdG9yfSwgYXQgZnJlcSAje2N1cnJlbnRfZnJlcX1cIlxuI1xuIyAgIHNldHVwQ29udHJvbHM6IChjb250cm9scykgLT5cbiMgICAgICMgdG9nZ2xpbmcgcGxheSAvIHBhdXNlXG4jICAgICBpZiBjb250cm9scy5wbGF5X2J0biBpcyBjb250cm9scy5wYXVzZV9idG5cbiMgICAgICAgJChcImFbaHJlZj0nI3tjb250cm9scy5wbGF5X2J0bn0nXVwiKS5jbGljayAoZSkgPT5cbiMgICAgICAgICBlLnByZXZlbnREZWZhdWx0KClcbiMgICAgICAgICBpZiBAaXNQbGF5aW5nKCkgdGhlbiBAcGF1c2UoKSBlbHNlIEBwbGF5KClcbiMgICAgIGVsc2VcbiMgICAgICAgIyBwbGF5IGJ1dHRvblxuIyAgICAgICAkKFwiYVtocmVmPScje2NvbnRyb2xzLnBsYXlfYnRufSddXCIpLmNsaWNrIChlKSA9PlxuIyAgICAgICAgIGUucHJldmVudERlZmF1bHQoKVxuIyAgICAgICAgIEBwbGF5KClcbiMgICAgICAgIyBwYXVzZSBidXR0b25cbiMgICAgICAgJChcImFbaHJlZj0nI3tjb250cm9scy5wYXVzZV9idG59J11cIikuY2xpY2sgKGUpID0+XG4jICAgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4jICAgICAgICAgQHBhdXNlKClcbiNcbiMgICAgICMgdm9sdW1lIGNvbnRyb2xzXG4jICAgICAkKFwiYVtocmVmPScje2NvbnRyb2xzLnZvbHVtZV91cH0nXVwiKS5jbGljayAoZSkgPT5cbiMgICAgICAgZS5wcmV2ZW50RGVmYXVsdCgpXG4jICAgICAgIEB2b2x1bWVVcCgpXG4jICAgICAkKFwiYVtocmVmPScje2NvbnRyb2xzLnZvbHVtZV9kb3dufSddXCIpLmNsaWNrIChlKSA9PlxuIyAgICAgICBlLnByZXZlbnREZWZhdWx0KClcbiMgICAgICAgQHZvbHVtZURvd24oKVxuI1xuI1xuIyAkLmZuLmJ1bXBpbiA9IChvcHRzKSAtPlxuIyAgICMgZGVmaW5lIGN1cnJlbnQgaW5zdGFuY2VcbiMgICBidW1waW4gPSBpZiB3aW5kb3cuYnVtcGluX2luc3RhbmNlIHRoZW4gd2luZG93LmJ1bXBpbl9pbnN0YW5jZSBlbHNlIHVuZGVmaW5lZFxuI1xuIyAgICMgc3BlY2lmeSBkZWZhdWx0IG9wdGlvbnNcbiMgICBzZXR0aW5ncyA9ICQuZXh0ZW5kIHtcbiMgICAgICMgcGxheSBvcHRpb25zXG4jICAgICBhdXRvcGxheTogZmFsc2VcbiMgICAgIGxvb3A6IGZhbHNlXG4jXG4jICAgICAjIGFuaW1hdGlvbiBvcHRpb25zXG4jICAgICBzZWxlY3RvcjogQHNlbGVjdG9yXG4jICAgICBzcGVlZDogMjAwICMgbXNcbiMgICAgIHNjYWxlOiBbMSwgMS41XSAjIHJhbmdlIG9yIHNpbmdsZSB2YWx1ZVxuIyAgICAgZnJlcTogWy4yLCAxXSAjIG1pbiAtIG1heCBrSHpcbiMgICAgIGFtcGw6IDAuM1xuIyAgICAgZGVjYXk6IDAuMDJcbiMgICAgIG9uS2ljazogLT5cbiNcbiMgICAgICMgaHJlZiBhdHRycyBmb3IgY29udHJvbCBidXR0b25zIG9uIHRoZSBwYWdlXG4jICAgICBwbGF5X2J0bjogJyNwbGF5J1xuIyAgICAgcGF1c2VfYnRuOiAnI3BhdXNlJ1xuIyAgICAgdm9sdW1lX3VwOiAnI3ZvbHVtZV91cCdcbiMgICAgIHZvbHVtZV9kb3duOiAnI3ZvbHVtZV9kb3duJ1xuI1xuIyAgIH0sIG9wdHNcbiNcbiMgICAjIGNoZWNrIGlmIGZ1bmN0aW9uIHdhcyBwYXNzZWQgaW5zdGVhZFxuIyAgIGZ1bmMgPSB1bmRlZmluZWRcbiMgICBmdW5jID0gb3B0cyBpZiB0eXBlb2Ygb3B0cyBpcyAnc3RyaW5nJ1xuI1xuIyAgICMgY2FsbCBmdW5jdGlvbiBpZiBmdW5jdGlvbiBpcyBnaXZlbiBhbmQgYSBidW1waW4gaW5zdGFuY2UgZXhpc3RzXG4jICAgYnVtcGluW2Z1bmNdKCkgaWYgZnVuYyBhbmQgYnVtcGluXG4jXG4jICAgIyBhZGQgYW5pbWF0aW9uIGlmIHNlbGVjdG9yIGlzIGdpdmVuIGFuZCBhIGJ1bXBpbiBpbnN0YW5jZSBleGlzdHNcbiMgICBidW1waW4uYWRkS2ljayBzZXR0aW5ncyBpZiBAc2VsZWN0b3IgYW5kIGJ1bXBpblxuI1xuIyAgICMgY3JlYXRlIGZpcnN0IGluc3RhbmNlIGlmIGJ1bXBpbiBkb2VzIG5vdCBleGlzdFxuIyAgIHVubGVzcyBidW1waW5cbiMgICAgIHdpbmRvdy5idW1waW5faW5zdGFuY2UgPSBidW1waW4gPSBuZXcgQnVtcGluIHNldHRpbmdzXG4jXG4jICAgIyB1cGRhdGUgdGhlIGluc3RhbmNlIG9uIHdpbmRvd1xuIyAgIHdpbmRvdy5idW1waW5faW5zdGFuY2UgPSBidW1waW5cbiNcbiMgICAjIG1ha2UgdGhlIHBsdWdpbiBjaGFpbmFibGVcbiMgICByZXR1cm4gQFxuXG5cblxuLyoqIFdFQlBBQ0sgRk9PVEVSICoqXG4gKiogLi9zcmMvY29mZmVlc2NyaXB0cy9wbHVnaW4uY29mZmVlXG4gKiovIl0sInNvdXJjZVJvb3QiOiIifQ==
+    Bumpin.prototype.getVolume = function() {
+      return this.d.getVolume();
+    };
+
+    Bumpin.prototype.volumeUp = function() {
+      return this.setVolume(this.getVolume() + .2 < 3 ? this.getVolume() + .2 : 2);
+    };
+
+    Bumpin.prototype.volumeDown = function() {
+      return this.setVolume(this.getVolume() - .2 > 0 ? this.getVolume() - .2 : 0);
+    };
+
+    Bumpin.prototype.isPlaying = function() {
+      return this.d.isPlaying();
+    };
+
+    Bumpin.prototype.isLoaded = function() {
+      return this.d.isLoaded();
+    };
+
+    Bumpin.prototype.getTime = function() {
+      return this.d.getTime();
+    };
+
+    Bumpin.prototype.loadAudio = function(audio_src, codecs) {
+      var a;
+      if (codecs) {
+        return this.d.load({
+          src: audio_src,
+          codecs: codecs
+        });
+      } else if (typeof audio_src === 'object') {
+        return this.d.load(audio_src);
+      } else {
+        a = new Audio();
+        a.crossOrigin = 'Anonymous';
+        a.src = audio_src;
+        return this.d.load(a);
+      }
+    };
+
+    Bumpin.prototype.addKick = function(settings) {
+      var animation_data, kick;
+      animation_data = {
+        selector: settings.selector,
+        speed: settings.speed,
+        scale: settings.scale,
+        freq: settings.freq,
+        ampl: settings.ampl,
+        threshold: settings.ampl,
+        is_animating: false,
+        id: Object.keys(this.kicks).length,
+        onKick: settings.onKick
+      };
+      kick = this.d.createKick({
+        frequency: animation_data.freq,
+        threshold: animation_data.threshold,
+        decay: animation_data.decay,
+        onKick: this.onKick(animation_data),
+        offKick: this.offKick(animation_data)
+      });
+      kick.id = Object.keys(this.kicks).length;
+      kick.animation_data = animation_data;
+      this.kicks["" + kick.id] = kick;
+      return kick.on();
+    };
+
+    Bumpin.prototype.onKick = function(a) {
+      var freq, selector;
+      selector = a.selector;
+      freq = a.freq;
+      return (function(_this) {
+        return function() {
+          var $elm, anim, anim_data, current_freq, kick, other_opts, range, ref, scale;
+          kick = _this.kicks["" + a.id];
+          $elm = $(kick.animation_data.selector);
+          current_freq = void 0;
+          if (typeof freq === 'number') {
+            current_freq = _this.d.getFrequency(freq);
+          } else {
+            current_freq = (ref = _this.d).getFrequency.apply(ref, freq);
+          }
+          if (kick && !kick.is_animating) {
+            anim = {};
+            anim_data = kick.animation_data;
+            scale = void 0;
+            if (typeof anim_data.scale === 'number') {
+              scale = anim_data.scale;
+            } else {
+              range = anim_data.scale[1] - anim_data.scale[0];
+              scale = anim_data.scale[0] + (current_freq / freq * range);
+            }
+            anim.scaleX = scale;
+            anim.scaleY = scale;
+            other_opts = {
+              begin: function() {
+                return _this.kicks["" + a.id].is_animating = true;
+              },
+              duration: scale / a.speed / 2
+            };
+            $elm.velocity(anim, other_opts);
+            setTimeout(function() {
+              var reverse_anim, reverse_other_opts;
+              reverse_anim = {};
+              reverse_anim.scaleX = 1;
+              reverse_anim.scaleY = 1;
+              reverse_other_opts = {
+                complete: function() {
+                  return _this.kicks["" + a.id].is_animating = false;
+                },
+                duration: scale / a.speed / 2
+              };
+              return $elm.velocity(reverse_anim, reverse_other_opts);
+            }, other_opts.duration);
+            return kick.animation_data.onKick(kick);
+          }
+        };
+      })(this);
+    };
+
+    Bumpin.prototype.offKick = function(a) {
+      var freq, selector;
+      selector = a.selector;
+      freq = a.freq;
+      return (function(_this) {
+        return function() {
+          var current_freq, ref;
+          current_freq = void 0;
+          if (typeof freq === 'number') {
+            return current_freq = _this.d.getFrequency(freq);
+          } else {
+            return current_freq = (ref = _this.d).getFrequency.apply(ref, freq);
+          }
+        };
+      })(this);
+    };
+
+    Bumpin.prototype.setupControls = function(controls) {
+      if (controls.play_btn === controls.pause_btn) {
+        $("a[href='" + controls.play_btn + "']").click((function(_this) {
+          return function(e) {
+            e.preventDefault();
+            if (_this.isPlaying()) {
+              return _this.pause();
+            } else {
+              return _this.play();
+            }
+          };
+        })(this));
+      } else {
+        $("a[href='" + controls.play_btn + "']").click((function(_this) {
+          return function(e) {
+            e.preventDefault();
+            return _this.play();
+          };
+        })(this));
+        $("a[href='" + controls.pause_btn + "']").click((function(_this) {
+          return function(e) {
+            e.preventDefault();
+            return _this.pause();
+          };
+        })(this));
+      }
+      $("a[href='" + controls.volume_up + "']").click((function(_this) {
+        return function(e) {
+          e.preventDefault();
+          return _this.volumeUp();
+        };
+      })(this));
+      return $("a[href='" + controls.volume_down + "']").click((function(_this) {
+        return function(e) {
+          e.preventDefault();
+          return _this.volumeDown();
+        };
+      })(this));
+    };
+
+    return Bumpin;
+
+  })();
+
+  $.fn.bumpin = function(opts) {
+    var bumpin, func, settings;
+    bumpin = window.bumpin_instance ? window.bumpin_instance : void 0;
+    settings = $.extend({
+      autoplay: false,
+      loop: false,
+      selector: this.selector,
+      speed: 200,
+      scale: [1, 1.5],
+      freq: [.2, 1],
+      ampl: 0.3,
+      decay: 0.02,
+      onKick: function() {},
+      play_btn: '#play',
+      pause_btn: '#pause',
+      volume_up: '#volume_up',
+      volume_down: '#volume_down'
+    }, opts);
+    func = void 0;
+    if (typeof opts === 'string') {
+      func = opts;
+    }
+    if (func && bumpin) {
+      bumpin[func]();
+    }
+    if (this.selector && bumpin) {
+      bumpin.addKick(settings);
+    }
+    if (!bumpin) {
+      window.bumpin_instance = bumpin = new Bumpin(settings);
+    }
+    window.bumpin_instance = bumpin;
+    return this;
+  };
+
+}).call(this);

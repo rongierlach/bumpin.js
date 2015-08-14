@@ -13,15 +13,9 @@ module.exports = (gulp, gutil, config) ->
     paths				= config.get 'paths'
     js_config			= config.get 'js'
 
-    src = "#{paths.dist.js}/bumpin.js"
+    src = ["#{paths.dist.js}/bumpin.js", "#{paths.dist.js}/bumpin.min.js"]
     dest = "#{paths.bin}"
 
     gulp.src src
-    .pipe changed(dest)
-    .pipe plumber()
-    .pipe rename('bumpin.js')
-    .pipe gulp.dest(dest)
-    .pipe uglify()
-    .pipe rename({suffix: '.min'})
     .pipe gulp.dest(dest)
     .on 'error', handleErrors

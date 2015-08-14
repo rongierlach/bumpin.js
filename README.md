@@ -1,22 +1,7 @@
-# Gulp Frontend
-Gulp frontend workflow using Coffeescript, Sass, Neat, &amp; Bourbon  
-  
-## Getting Started
-Install npm modules with ```npm install```  
-  
-Next install bower components with ```bower install```  
-  
-Use ```npm install -g bower``` if bower is not already installed  
-  
-Work on files in the **src** folder, compiled code goes to a folder named **dist**
+# Bumpin.js
 
-## Running Gulp
-Run ```gulp``` to get working  
+I wanted to create a plugin that imitated effect speakers bumping to the music. :sunglasses:
 
-Clean out the **dist** folder with ```gulp clean```  
+Lots of bugs and currently only works as intended in Chrome. Feel free to post an issue. 
 
-To just build run ```gulp build```  
-
-Optionally you may pass a production flag with ```gulp build --production``` to minify scripts
-
-### Happy building!
+Check out the example <a href="http://codepen.io/youfoundron/full/ZGZLOL" target="_blank">here</a>.

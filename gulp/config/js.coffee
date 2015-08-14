@@ -21,7 +21,7 @@ module.exports = (config) ->
         "_CDN_": JSON.stringify(app_config.cdn)
     }
     {
-      src: [ "#{paths.src.coffee}/bumpin.coffee"]
+      src: [ "#{paths.src.coffee}/plugin.coffee"]
       dest: "bumpin.js"
     }
   ]

@@ -1,6 +1,6 @@
 # Bumpin.js
 
-I wanted to create a plugin that imitated effect speakers bumping to the music. :sunglasses:
+I wanted to create a plugin that imitated speakers bumping to the music. :sunglasses:
 
 Lots of bugs and currently only works as intended in Chrome. Feel free to post an issue. 
 
